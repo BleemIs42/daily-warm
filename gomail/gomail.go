@@ -10,7 +10,8 @@ import (
 	"time"
 )
 
-type configuration struct {
+// Configuration for mail
+type Configuration struct {
 	Host     string
 	Port     uint16
 	Username string
@@ -19,7 +20,7 @@ type configuration struct {
 }
 
 // Config default configuration
-var Config = configuration{
+var Config = Configuration{
 	Host:     "smtp.qq.com",
 	Port:     25,
 	Username: "",

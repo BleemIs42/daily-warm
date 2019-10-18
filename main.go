@@ -1,8 +1,6 @@
 package main
 
 import (
-	"daily-warm/api"
-	"daily-warm/gomail"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -11,11 +9,15 @@ import (
 	"strings"
 	"time"
 
+	"github.com/barryyan/daily-warm/api"
+	"github.com/barryyan/daily-warm/gomail"
+
 	env "github.com/joho/godotenv"
 	cron "github.com/robfig/cron/v3"
 )
 
-type user struct {
+// User for receive email
+type User struct {
 	Email string `json:"email"`
 	Local string `json:"local"`
 }
@@ -69,8 +71,8 @@ func batchSendMail() {
 	}
 }
 
-func getUsers(envKey string) []user {
-	var users []user
+func getUsers(envKey string) []User {
+	var users []User
 	err := json.Unmarshal([]byte(os.Getenv(envKey)), &users)
 	if err != nil {
 		log.Fatal(err)

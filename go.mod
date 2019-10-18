@@ -1,4 +1,4 @@
-module daily-warm
+module github.com/barryyan/daily-warm
 
 go 1.13
 

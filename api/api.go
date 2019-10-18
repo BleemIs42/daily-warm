@@ -10,13 +10,15 @@ import (
 	query "github.com/PuerkitoBio/goquery"
 )
 
-type one struct {
+// One site info
+type One struct {
 	Date   string
 	ImgURL string
 	Word   string
 }
 
-type weather struct {
+// Weather data from https://tianqi.moji.com/weather/china
+type Weather struct {
 	City     string
 	Temp     string
 	Weather  string
@@ -54,7 +56,7 @@ func FetchDom(url string) *query.Document {
 }
 
 // GetWeather data
-func GetWeather(local string) weather {
+func GetWeather(local string) Weather {
 	url := "https://tianqi.moji.com/weather/china/" + local
 	doc := FetchDom(url)
 	wrap := doc.Find(".wea_info .left")
@@ -70,7 +72,7 @@ func GetWeather(local string) weather {
 	} else {
 		limit = "无"
 	}
-	return weather{
+	return Weather{
 		City:     doc.Find("#search .search_default em").Text(),
 		Temp:     wrap.Find(".wea_weather em").Text() + "°",
 		Weather:  wrap.Find(".wea_weather b").Text(),
@@ -83,7 +85,7 @@ func GetWeather(local string) weather {
 }
 
 // GetONE data
-func GetONE() one {
+func GetONE() One {
 	url := "http://wufazhuce.com/"
 	doc := FetchDom(url)
 	wrap := doc.Find(".fp-one .carousel .item.active")
@@ -93,7 +95,7 @@ func GetONE() one {
 	if !ok {
 		imgURL = ""
 	}
-	return one{
+	return One{
 		ImgURL: imgURL,
 		Date:   fmt.Sprintf("%s %s", day, monthYear),
 		Word:   wrap.Find(".fp-one-cita a").Text(),
