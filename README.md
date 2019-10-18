@@ -1,4 +1,5 @@
-# daily-warm
+# Daily-warm
+> 每天定时发邮件给你关心的人
 
 ## Usage
 
