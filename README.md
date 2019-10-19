@@ -26,6 +26,10 @@ go mod download
 go build -o daily-warm *.go
 ```
 
+## Screenshot
+
+<img width="400" src="https://github.com/BarryYan/daily-warm/blob/master/screenshot.jpg?raw=true">
+
 ## Package
 
 ```go
