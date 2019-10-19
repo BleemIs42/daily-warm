@@ -99,6 +99,8 @@ func sendMail(content string, to string) {
 	gomail.Config.Username = os.Getenv("MAIL_USERNAME")
 	gomail.Config.Password = os.Getenv("MAIL_PASSWORD")
 	gomail.Config.From = os.Getenv("MAIL_FROM")
+	gomail.Config.Host = os.Getenv("MAIL_HOST")
+	gomail.Config.Port = os.Getenv("MAIL_PORT")
 
 	email := gomail.GoMail{
 		To:      []string{to},

@@ -13,7 +13,7 @@ import (
 // Configuration for mail
 type Configuration struct {
 	Host     string
-	Port     uint16
+	Port     string
 	Username string
 	Password string
 	From     string
@@ -22,7 +22,7 @@ type Configuration struct {
 // Config default configuration
 var Config = Configuration{
 	Host:     "smtp.qq.com",
-	Port:     25,
+	Port:     "25",
 	Username: "",
 	Password: "",
 	From:     "",
@@ -103,7 +103,7 @@ func (gm *GoMail) Send() error {
 		from = parseMailAddr(Config.From).Address
 	}
 
-	addr := fmt.Sprintf("%s:%d", Config.Host, Config.Port)
+	addr := fmt.Sprintf("%s:%s", Config.Host, Config.Port)
 	auth := smtp.PlainAuth("", Config.Username, Config.Password, Config.Host)
 	return smtp.SendMail(addr, auth, from, to, []byte(gm.String()))
 }
