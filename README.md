@@ -11,7 +11,7 @@ MAIL_HOST = smtp.qq.com
 MAIL_PORT = 25
 MAIL_SUBJECT = 每日一暖, 温情一生
 MAIL_CRON = "0/1 * * * *"
-MAIL_FROM = 天心<790956404@qq.com>
+MAIL_FROM = user<user@qq.com>
 MAIL_TO = [{"email": "user<user@qq.com>", "local": "shaanxi/xian"}]
 
 # 2. Run
