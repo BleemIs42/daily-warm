@@ -9,20 +9,21 @@ MAIL_USERNAME = user@qq.com
 MAIL_PASSWORD = ***********
 MAIL_HOST = smtp.qq.com
 MAIL_PORT = 25
-MAIL_SUBJECT = 每日一暖, 温情一生
+# 每分钟发一次
 MAIL_CRON = "0/1 * * * *"
+MAIL_SUBJECT = 每日一暖, 温情一生
 MAIL_FROM = user<user@qq.com>
 MAIL_TO = [{"email": "user<user@qq.com>", "local": "shaanxi/xian"}]
 
 # 2. Run
-sh daily-warm.sh
+./daily-warm
 ```
 
 ## Build
 
 ```bash
 go mod download
-go run *.go
+go build -o daily-warm *.go
 ```
 
 ## Package
@@ -56,15 +57,32 @@ func (gm *GoMail) Send() error {}
 package api 
 
 func CreateClient() *http.Client
-func FetchDom(url string) *query.Document
-
-type One struct{ 
-  Date   string
-  ImgURL string
-  Word   string
+func Fetch(url string) io.Reader
+func FetchHTML(url string) *query.Document
+type English struct{
+  ImgURL   string
+  Sentence string
+}
+func GetEnglish() English
+type One struct{
+  Date     string
+  ImgURL   string
+  Sentence string
 }
 func GetONE() One
-
+type Poem struct{
+  Title   string   `json:"title"`
+  Dynasty string   `json:"dynasty"`
+  Author  string   `json:"author"`
+  Content []string `json:"content"`
+}
+func GetPoem() Poem
+type PoemRes struct{
+  Status string `json:"status"`
+  Data   struct {
+    Origin Poem `json:"origin"`
+  } `json:"data"`
+}
 type Weather struct{
   City     string
   Temp     string
@@ -75,5 +93,5 @@ type Weather struct{
   Limit    string
   Note     string
 }
-func GetWeather(local string) Weather
+    func GetWeather(local string) Weather
 ```

@@ -5,6 +5,7 @@ import (
 	"crypto/md5"
 	"fmt"
 	"io"
+	"log"
 	"net/mail"
 	"net/smtp"
 	"time"
@@ -41,7 +42,7 @@ type GoMail struct {
 func parseMailAddr(address string) *mail.Address {
 	addr, err := mail.ParseAddress(address)
 	if err != nil {
-		return &mail.Address{Name: "", Address: ""}
+		log.Fatalf("Parse email address %s error: %s", address, err)
 	}
 	return addr
 }
@@ -98,11 +99,11 @@ func (gm *GoMail) Send() error {
 	for i := range gm.To {
 		to[i] = parseMailAddr(gm.To[i]).Address
 	}
-	from := parseMailAddr(gm.From).Address
-	if from == "" {
-		from = parseMailAddr(Config.From).Address
-	}
 
+	if gm.From == "" {
+		gm.From = Config.From
+	}
+	from := parseMailAddr(gm.From).Address
 	addr := fmt.Sprintf("%s:%s", Config.Host, Config.Port)
 	auth := smtp.PlainAuth("", Config.Username, Config.Password, Config.Host)
 	return smtp.SendMail(addr, auth, from, to, []byte(gm.String()))
