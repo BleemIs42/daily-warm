@@ -15,15 +15,12 @@ MAIL_SUBJECT = 每日一暖, 温情一生
 MAIL_FROM = user<user@qq.com>
 MAIL_TO = [{"email": "user<user@qq.com>", "local": "shaanxi/xian"}]
 
-# 2. Run
-./dwm.out
-```
-
-## Build
-
-```bash
+# 2.Build
 go mod download
 go build -o dwm.out *.go
+
+# 3. Run
+./dwm.out
 ```
 
 ## Screenshot
@@ -97,5 +94,5 @@ type Weather struct{
   Limit    string
   Note     string
 }
-    func GetWeather(local string) Weather
+func GetWeather(local string) Weather
 ```
