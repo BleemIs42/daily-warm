@@ -1,5 +1,5 @@
 # Daily-warm
-> 每天定时发邮件给你关心的人
+> 每天定时发邮件给你关心的人, 内容包含天气, one 的一句话, 一句英语, 一首古诗
 
 ## Usage
 
@@ -25,6 +25,10 @@ MAIL_TO = [{"email": "user<user@qq.com>", "local": "shaanxi/xian"}]
 go mod download
 go build -o dwm.out *.go
 ```
+
+## Screenshot
+
+<img width="400" src="https://github.com/BarryYan/daily-warm/blob/master/screenshot.jpg?raw=true">
 
 ## Package
 
