@@ -1,2 +1,5 @@
-.env
+*.env*
+!.env.example
 *.html
+*.sh
+*.out

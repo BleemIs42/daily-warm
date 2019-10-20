@@ -16,14 +16,14 @@ MAIL_FROM = user<user@qq.com>
 MAIL_TO = [{"email": "user<user@qq.com>", "local": "shaanxi/xian"}]
 
 # 2. Run
-./daily-warm
+./dwm.out
 ```
 
 ## Build
 
 ```bash
 go mod download
-go build -o daily-warm *.go
+go build -o dwm.out *.go
 ```
 
 ## Package
