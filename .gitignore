@@ -1,5 +1,9 @@
 *.env*
 !.env.example
-*.html
-*.sh
+
+test.html
+
+me.sh
+dwm.sh
+
 *.out

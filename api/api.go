@@ -96,11 +96,6 @@ func GetWeather(local string) Weather {
 	}
 
 	limit := wrap.Find(".wea_about b").Text()
-	if limit != "" {
-		limit = strings.ReplaceAll(limit, "尾号限行", "")
-	} else {
-		limit = "无"
-	}
 	return Weather{
 		City:     doc.Find("#search .search_default em").Text(),
 		Temp:     wrap.Find(".wea_weather em").Text() + "°",
@@ -120,10 +115,7 @@ func GetONE() One {
 	wrap := doc.Find(".fp-one .carousel .item.active")
 	day := wrap.Find(".dom").Text()
 	monthYear := wrap.Find(".may").Text()
-	imgURL, ok := wrap.Find(".fp-one-imagen").Attr("src")
-	if !ok {
-		imgURL = ""
-	}
+	imgURL, _ := wrap.Find(".fp-one-imagen").Attr("src")
 	return One{
 		ImgURL:   imgURL,
 		Date:     fmt.Sprintf("%s %s", day, monthYear),
@@ -136,10 +128,7 @@ func GetEnglish() English {
 	url := "http://dict.eudic.net/home/dailysentence"
 	doc := FetchHTML(url)
 	wrap := doc.Find(".containter .head-img")
-	imgURL, ok := wrap.Find(".himg").Attr("src")
-	if !ok {
-		imgURL = ""
-	}
+	imgURL, _ := wrap.Find(".himg").Attr("src")
 	return English{
 		ImgURL:   imgURL,
 		Sentence: wrap.Find(".sentence .sect_en").Text(),
@@ -166,4 +155,23 @@ func GetPoem() Poem {
 		log.Fatalf("Get poem status %s, res: %s", status, resJSON)
 	}
 	return resJSON.Data.Origin
+}
+
+// Wallpaper data
+type Wallpaper struct {
+	Title  string
+	ImgURL string
+}
+
+// GetWallpaper from bing
+func GetWallpaper() Wallpaper {
+	url := "https://bing.ioliu.cn/"
+	doc := FetchHTML(url)
+	wrap := doc.Find(".container .item .card").Eq(0)
+	imgURL, _ := wrap.Find("img").Attr("src")
+	title := strings.Split(wrap.Find(".description h3").Text(), " ")[0]
+	return Wallpaper{
+		Title:  title,
+		ImgURL: imgURL,
+	}
 }

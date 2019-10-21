@@ -22,21 +22,30 @@ type User struct {
 	Local string `json:"local"`
 }
 
+func isDev() bool {
+	return os.Getenv("MAIL_MODE") == "dev"
+}
+
 func main() {
 	loadConfig()
+
+	if isDev() {
+		batchSendMail()
+		return
+	}
 
 	nyc, _ := time.LoadLocation("Asia/Shanghai")
 	cJob := cron.New(cron.WithLocation(nyc))
 
 	cronCfg := os.Getenv("MAIL_CRON")
-	if cronCfg != "" {
+	if cronCfg == "" {
+		batchSendMail()
+	} else {
 		cJob.AddFunc(cronCfg, func() {
 			batchSendMail()
 		})
 		cJob.Start()
 		select {}
-	} else {
-		batchSendMail()
 	}
 }
 
@@ -49,9 +58,11 @@ func loadConfig() {
 
 func batchSendMail() {
 	loadConfig()
+
 	one := api.GetONE()
 	english := api.GetEnglish()
 	poem := api.GetPoem()
+	wallpaper := api.GetWallpaper()
 
 	users := getUsers("MAIL_TO")
 	if len(users) == 0 {
@@ -64,12 +75,18 @@ func batchSendMail() {
 	for _, user := range users {
 		weather := api.GetWeather(user.Local)
 		datas := map[string]interface{}{
-			"one":     one,
-			"weather": weather,
-			"english": english,
-			"poem":    poem,
+			"one":       one,
+			"weather":   weather,
+			"english":   english,
+			"poem":      poem,
+			"wallpaper": wallpaper,
 		}
+
 		html := generateHTML(HTML, datas)
+		if isDev() {
+			fmt.Println(html)
+			return
+		}
 
 		go func(email string) {
 			sendMail(html, email)
