@@ -63,6 +63,7 @@ func batchSendMail() {
 	english := api.GetEnglish()
 	poem := api.GetPoem()
 	wallpaper := api.GetWallpaper()
+	trivia := api.GetTrivia()
 
 	users := getUsers("MAIL_TO")
 	if len(users) == 0 {
@@ -80,6 +81,7 @@ func batchSendMail() {
 			"english":   english,
 			"poem":      poem,
 			"wallpaper": wallpaper,
+			"trivia":    trivia,
 		}
 
 		html := generateHTML(HTML, datas)

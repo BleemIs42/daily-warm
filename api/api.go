@@ -13,47 +13,6 @@ import (
 	query "github.com/PuerkitoBio/goquery"
 )
 
-// Weather site data
-type Weather struct {
-	City     string
-	Temp     string
-	Weather  string
-	Air      string
-	Humidity string
-	Wind     string
-	Limit    string
-	Note     string
-}
-
-// One site info
-type One struct {
-	Date     string
-	ImgURL   string
-	Sentence string
-}
-
-// English info
-type English struct {
-	ImgURL   string
-	Sentence string
-}
-
-// Poem info
-type Poem struct {
-	Title   string   `json:"title"`
-	Dynasty string   `json:"dynasty"`
-	Author  string   `json:"author"`
-	Content []string `json:"content"`
-}
-
-// PoemRes response data
-type PoemRes struct {
-	Status string `json:"status"`
-	Data   struct {
-		Origin Poem `json:"origin"`
-	} `json:"data"`
-}
-
 // CreateClient a http
 func CreateClient() *http.Client {
 	tr := &http.Transport{
@@ -157,12 +116,6 @@ func GetPoem() Poem {
 	return resJSON.Data.Origin
 }
 
-// Wallpaper data
-type Wallpaper struct {
-	Title  string
-	ImgURL string
-}
-
 // GetWallpaper from bing
 func GetWallpaper() Wallpaper {
 	url := "https://bing.ioliu.cn/"
@@ -173,5 +126,17 @@ func GetWallpaper() Wallpaper {
 	return Wallpaper{
 		Title:  title,
 		ImgURL: imgURL,
+	}
+}
+
+// GetTrivia data
+func GetTrivia() Trivia {
+	url := "http://www.lengdou.net/random"
+	doc := FetchHTML(url)
+	wrap := doc.Find(".container .media .media-body")
+	imgURL, _ := wrap.Find(".topic-img img").Attr("src")
+	return Trivia{
+		ImgURL:      imgURL,
+		Description: strings.Split(wrap.Find(".topic-content").Text(), "#")[0],
 	}
 }
