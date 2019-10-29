@@ -107,7 +107,6 @@ func batchSendMail() {
 			weather := api.GetWeather(user.Local)
 			parts["weather"] = weather
 			html := generateHTML(HTML, parts)
-			fmt.Println(user.Email, user.Local)
 			sendMail(html, user.Email)
 			<-ch
 		}()
