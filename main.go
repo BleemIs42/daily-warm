@@ -56,45 +56,62 @@ func loadConfig() {
 	}
 }
 
+// TODO: refactor
+func getParts() map[string]interface{} {
+	wrapMap := map[string]func() interface{}{
+		"one":       func() interface{} { return api.GetONE() },
+		"english":   func() interface{} { return api.GetEnglish() },
+		"poem":      func() interface{} { return api.GetPoem() },
+		"wallpaper": func() interface{} { return api.GetWallpaper() },
+		"trivia":    func() interface{} { return api.GetTrivia() },
+	}
+
+	ch := make(chan int)
+	defer close(ch)
+
+	parts := map[string]interface{}{}
+	for name, getPart := range wrapMap {
+		go func() {
+			parts[name] = getPart()
+			<-ch
+		}()
+		ch <- 1
+	}
+
+	return parts
+}
+
 func batchSendMail() {
 	loadConfig()
-
-	one := api.GetONE()
-	english := api.GetEnglish()
-	poem := api.GetPoem()
-	wallpaper := api.GetWallpaper()
-	trivia := api.GetTrivia()
 
 	users := getUsers("MAIL_TO")
 	if len(users) == 0 {
 		return
 	}
 
-	res := make(chan int)
-	defer close(res)
+	parts := getParts()
+
+	ch := make(chan int)
+	defer close(ch)
+
+	if isDev() {
+		weather := api.GetWeather(users[0].Local)
+		parts["weather"] = weather
+		html := generateHTML(HTML, parts)
+		fmt.Println(html)
+		return
+	}
 
 	for _, user := range users {
-		weather := api.GetWeather(user.Local)
-		datas := map[string]interface{}{
-			"one":       one,
-			"weather":   weather,
-			"english":   english,
-			"poem":      poem,
-			"wallpaper": wallpaper,
-			"trivia":    trivia,
-		}
-
-		html := generateHTML(HTML, datas)
-		if isDev() {
-			fmt.Println(html)
-			return
-		}
-
-		go func(email string) {
-			sendMail(html, email)
-			<-res
-		}(user.Email)
-		res <- 1
+		go func() {
+			weather := api.GetWeather(user.Local)
+			parts["weather"] = weather
+			html := generateHTML(HTML, parts)
+			fmt.Println(user.Email, user.Local)
+			sendMail(html, user.Email)
+			<-ch
+		}()
+		ch <- 1
 	}
 }
 
