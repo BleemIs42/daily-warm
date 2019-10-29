@@ -28,6 +28,7 @@ go build -o dwm.out *.go
 <img width="400" src="https://github.com/BarryYan/daily-warm/blob/master/screenshot.jpg?raw=true">
 
 ## Package
+[github.com/barryyan/daily-warm/gomail](https://godoc.org/github.com/BarryYan/daily-warm/gomail)
 
 ```go
 // import "github.com/barryyan/daily-warm/gomail"
@@ -53,6 +54,7 @@ type GoMail struct{
 func (gm *GoMail) Send() error {}
 ```
 
+[github.com/barryyan/daily-warm/api](https://godoc.org/github.com/BarryYan/daily-warm/api)
 ```go
 // import "github.com/barryyan/daily-warm/api"
 package api 
