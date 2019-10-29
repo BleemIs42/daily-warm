@@ -118,11 +118,14 @@ func GetPoem() Poem {
 
 // GetWallpaper from bing
 func GetWallpaper() Wallpaper {
-	url := "https://bing.ioliu.cn/"
+	url := "https://cn.bing.com"
 	doc := FetchHTML(url)
-	wrap := doc.Find(".container .item .card").Eq(0)
-	imgURL, _ := wrap.Find("img").Attr("src")
-	title := strings.Split(wrap.Find(".description h3").Text(), " ")[0]
+	imgURL, _ := doc.Find("#bgLink").Attr("href")
+	imgURL = url + imgURL
+	title, titleOk := doc.Find("#sh_cp").Attr("title")
+	if titleOk {
+		title = strings.Split(title, " ")[0]
+	}
 	return Wallpaper{
 		Title:  title,
 		ImgURL: imgURL,

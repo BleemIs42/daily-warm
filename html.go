@@ -53,7 +53,7 @@ const HTML = `
     <br>
     <div>
       <div><img width="100%" src="{{wallpaper.ImgURL}}"></div>
-      <div style="margin-top: 10px;line-height: 1.5">&emsp;&emsp;{{wallpaper.Title}}</div>
+      <div style="margin-top: 10px;line-height: 1.5;text-align: center;">{{wallpaper.Title}}</div>
     </div>
     <br>
     <div style="text-align: center;font-size: 30px;">📚</div>
