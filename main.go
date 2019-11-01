@@ -72,8 +72,8 @@ func getParts() map[string]interface{} {
 	for name, getPart := range wrapMap {
 		wg.Add(1)
 		go func(key string, fn func() interface{}) {
+			defer wg.Done()
 			parts[key] = fn()
-			wg.Done()
 		}(name, getPart)
 	}
 	wg.Wait()
@@ -99,14 +99,17 @@ func batchSendMail() {
 	}
 
 	wg := sync.WaitGroup{}
+	lock := sync.Mutex{}
 	for _, user := range users {
 		wg.Add(1)
 		go func(user User) {
+			defer wg.Done()
 			weather := api.GetWeather(user.Local)
+			lock.Lock()
 			parts["weather"] = weather
 			html := generateHTML(HTML, parts)
+			lock.Unlock()
 			sendMail(html, user.Email)
-			wg.Done()
 		}(user)
 	}
 	wg.Wait()
