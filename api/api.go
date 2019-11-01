@@ -54,7 +54,7 @@ func GetWeather(local string) Weather {
 		humidity = humidityDesc[1]
 	}
 
-	limit := wrap.Find(".wea_about b").Text()
+	limit := string(([]rune)(wrap.Find(".wea_about b").Text())[4:])
 	return Weather{
 		City:     doc.Find("#search .search_default em").Text(),
 		Temp:     wrap.Find(".wea_weather em").Text() + "°",
