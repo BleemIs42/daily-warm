@@ -7,6 +7,7 @@ import (
 	"os"
 	"reflect"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/barryyan/daily-warm/api"
@@ -66,18 +67,16 @@ func getParts() map[string]interface{} {
 		"trivia":    func() interface{} { return api.GetTrivia() },
 	}
 
-	ch := make(chan int)
-	defer close(ch)
-
+	wg := sync.WaitGroup{}
 	parts := map[string]interface{}{}
 	for name, getPart := range wrapMap {
-		go func() {
-			parts[name] = getPart()
-			<-ch
-		}()
-		ch <- 1
+		wg.Add(1)
+		go func(key string, fn func() interface{}) {
+			parts[key] = fn()
+			wg.Done()
+		}(name, getPart)
 	}
-
+	wg.Wait()
 	return parts
 }
 
@@ -91,9 +90,6 @@ func batchSendMail() {
 
 	parts := getParts()
 
-	ch := make(chan int)
-	defer close(ch)
-
 	if isDev() {
 		weather := api.GetWeather(users[0].Local)
 		parts["weather"] = weather
@@ -102,16 +98,18 @@ func batchSendMail() {
 		return
 	}
 
+	wg := sync.WaitGroup{}
 	for _, user := range users {
-		go func() {
+		wg.Add(1)
+		go func(user User) {
 			weather := api.GetWeather(user.Local)
 			parts["weather"] = weather
 			html := generateHTML(HTML, parts)
 			sendMail(html, user.Email)
-			<-ch
-		}()
-		ch <- 1
+			wg.Done()
+		}(user)
 	}
+	wg.Wait()
 }
 
 func getUsers(envUser string) []User {
