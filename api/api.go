@@ -56,7 +56,7 @@ func GetWeather(local string) Weather {
 
 	limitDesc := ([]rune)(wrap.Find(".wea_about b").Text())
 	limit := ""
-	if len(limit) <= 4 {
+	if len(limitDesc) <= 4 {
 		limit = string(limitDesc)
 	} else {
 		limit = string(limitDesc[4:])
