@@ -98,3 +98,6 @@ type Weather struct{
 }
 func GetWeather(local string) Weather
 ```
+
+## 其它语言版本
+[node robot-mail](https://github.com/Birjemin/robot-mail)
